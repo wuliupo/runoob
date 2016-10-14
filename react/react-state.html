@@ -1,0 +1,28 @@
+<h1>React State(状态)</h1>
+<p>React 把组件看成是一个状态机（State Machines）。通过与用户的交互，实现不同状态，然后渲染 UI，让用户界面和数据保持一致。</p>
+<p>React 里，只需更新组件的 state，然后根据新的 state 重新渲染用户界面（不要操作 DOM）。</p>
+<p>以下实例中创建了 <b>LikeButton</b> 组件，getInitialState 方法用于定义初始状态，也就是一个对象，这个对象可以通过 this.state 属性读取。当用户点击组件，导致状态变化，this.setState 方法就修改状态值，每次修改以后，自动调用 this.render 方法，再次渲染组件。
+<pre>
+var LikeButton = React.createClass({
+  getInitialState: function() {
+    return {liked: false};
+  },
+  handleClick: function(event) {
+    this.setState({liked: !this.state.liked});
+  },
+  render: function() {
+    var text = this.state.liked ? '喜欢' : '不喜欢';
+    return (
+      &lt;p onClick={this.handleClick}&gt;
+        你&lt;b&gt;{text}&lt;/b&gt;我。点我切换状态。
+      &lt;/p&gt;
+    );
+  }
+});
+
+React.render(
+  &lt;LikeButton /&gt;,
+  document.getElementById('example')
+);
+</pre>
+<p><a class="tryitbtn" href="/try/try.php?filename=try_react_state" target="_blank">尝试一下 »</a></p>

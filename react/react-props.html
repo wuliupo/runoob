@@ -1,0 +1,172 @@
+<h1>React Props</h1>
+<p>state 和 props 主要的区别在于 <b>props</b> 是不可变的，而 state 可以根据与用户交互来改变。这就是为什么有些容器组件需要定义 state 来更新和修改数据。 而子组件只能通过 props 来传递数据。</p>
+<hr>
+<h2>使用 Props</h2>
+<p>
+以下实例演示了如何在组件中使用 props：</p>
+<pre>
+var HelloMessage = React.createClass({
+  render: function() {
+    return &lt;h1&gt;Hello {this.props.name}&lt;/h1&gt;;
+  }
+});
+
+ReactDOM.render(
+  &lt;HelloMessage name="Runoob" /&gt;,
+  document.getElementById('example')
+);
+</pre>
+<p><a class="tryitbtn" href="/try/try.php?filename=try_react_component2" target="_blank">尝试一下 »</a></p>
+<p>实例中 name 属性通过 this.props.name 来获取。</p>
+<hr>
+<h2>默认 Props</h2>
+<p>你可以通过 getDefaultProps()  方法为 props 设置默认值，实例如下：
+</p>
+<pre>
+var HelloMessage = React.createClass({
+  getDefaultProps: function() {
+    return {
+      name: 'Runoob'
+    };
+  },
+  render: function() {
+    return &lt;h1&gt;Hello {this.props.name}&lt;/h1&gt;;
+  }
+});
+
+ReactDOM.render(
+  &lt;HelloMessage /&gt;,
+  document.getElementById('example')
+);
+</pre>
+<p><a class="tryitbtn" href="/try/try.php?filename=try_react_props_default" target="_blank">尝试一下 »</a></p>
+<hr>
+<h2>State 和 Props</h2>
+<p>
+以下实例演示了如何在应用中组合使用 state 和 props 。我们可以在父组件中设置 state， 并通过在子组件上使用 props 将其传递到子组件上。在 render 函数中, 我们设置 name 和 site 来获取父组件传递过来的数据。</p>
+<pre>
+var WebSite = React.createClass({
+  getInitialState: function() {
+    return {
+      name: "菜鸟教程",
+      site: "http://www.runoob.com"
+    };
+  },
+
+  render: function() {
+    return (
+      &lt;div&gt;
+        &lt;Name name={this.state.name} /&gt;
+        &lt;Link site={this.state.site} /&gt;
+      &lt;/div&gt;
+    );
+  }
+});
+
+var Name = React.createClass({
+  render: function() {
+    return (
+      &lt;h1&gt;{this.props.name}&lt;/h1&gt;
+    );
+  }
+});
+
+var Link = React.createClass({
+  render: function() {
+    return (
+      &lt;a href={this.props.site}&gt;
+        {this.props.site}
+      &lt;/a&gt;
+    );
+  }
+});
+
+React.render(
+  &lt;WebSite /&gt;,
+  document.getElementById('example')
+);
+</pre>
+<p><a class="tryitbtn" href="/try/try.php?filename=try_react_props_state" target="_blank">尝试一下 »</a></p>
+<hr>
+<h2>Props 验证</h2>
+<p>Props 验证使用 <b>propTypes</b>，它可以保证我们的应用组件被正确使用，React.PropTypes 提供很多验证器 (validator) 来验证传入数据是否有效。当向 props 传入无效数据时，JavaScript 控制台会抛出警告。</p>
+<p>以下实例创建一个 Mytitle 组件，属性 title 是必须的且是字符串，如果是一个数字则会报错 ：</p>
+<pre>
+var title = "菜鸟教程";
+// var title = 123;
+var MyTitle = React.createClass({
+  propTypes: {
+    title: React.PropTypes.string.isRequired,
+  },
+
+  render: function() {
+     return &lt;h1&gt; {this.props.title} &lt;/h1&gt;;
+   }
+});
+ReactDOM.render(
+    &lt;MyTitle title={title} /&gt;,
+    document.getElementById('example')
+);
+</pre>
+<p><a class="tryitbtn" href="/try/try.php?filename=try_react_proptypes" target="_blank">尝试一下 »</a></p>
+<p>如果 title 使用数字变量，控制台会出现以下错误信息：</p>
+<p><img width="70%" src="http://www.runoob.com/wp-content/uploads/2016/02/MyTitle-error.jpg"></p>
+<p>更多验证器说明如下：</p>
+<pre>
+React.createClass({
+  propTypes: {
+    // 可以声明 prop 为指定的 JS 基本数据类型，默认情况，这些数据是可选的
+   optionalArray: React.PropTypes.array,
+    optionalBool: React.PropTypes.bool,
+    optionalFunc: React.PropTypes.func,
+    optionalNumber: React.PropTypes.number,
+    optionalObject: React.PropTypes.object,
+    optionalString: React.PropTypes.string,
+
+    // 可以被渲染的对象 numbers, strings, elements 或 array
+    optionalNode: React.PropTypes.node,
+
+    //  React 元素
+    optionalElement: React.PropTypes.element,
+
+    // 用 JS 的 instanceof 操作符声明 prop 为类的实例。
+    optionalMessage: React.PropTypes.instanceOf(Message),
+
+    // 用 enum 来限制 prop 只接受指定的值。
+    optionalEnum: React.PropTypes.oneOf(['News', 'Photos']),
+
+    // 可以是多个对象类型中的一个
+    optionalUnion: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number,
+      React.PropTypes.instanceOf(Message)
+    ]),
+
+    // 指定类型组成的数组
+    optionalArrayOf: React.PropTypes.arrayOf(React.PropTypes.number),
+
+    // 指定类型的属性构成的对象
+    optionalObjectOf: React.PropTypes.objectOf(React.PropTypes.number),
+
+    // 特定 shape 参数的对象
+    optionalObjectWithShape: React.PropTypes.shape({
+      color: React.PropTypes.string,
+      fontSize: React.PropTypes.number
+    }),
+
+    // 任意类型加上 `isRequired` 来使 prop 不可空。
+    requiredFunc: React.PropTypes.func.isRequired,
+
+    // 不可空的任意类型
+    requiredAny: React.PropTypes.any.isRequired,
+
+    // 自定义验证器。如果验证失败需要返回一个 Error 对象。不要直接使用 `console.warn` 或抛异常，因为这样 `oneOfType` 会失效。
+    customProp: function(props, propName, componentName) {
+      if (!/matchme/.test(props[propName])) {
+        return new Error('Validation failed!');
+      }
+    }
+  },
+  /* ... */
+});
+</pre>
